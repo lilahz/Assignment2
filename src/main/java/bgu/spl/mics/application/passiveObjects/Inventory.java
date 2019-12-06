@@ -20,12 +20,17 @@ public class Inventory {
 		return null;
 	}
 
+
+
 	/**
      * Initializes the inventory. This method adds all the items given to the gadget
      * inventory.
      * <p>
      * @param inventory 	Data structure containing all data necessary for initialization
      * 						of the inventory.
+	 *
+	 * @pre: gadgets == null && @param != null
+	 * @post: gadgets != null && size() == gadgets.size()
      */
 	public void load (String[] inventory) {
 		//TODO: Implement this
@@ -36,8 +41,11 @@ public class Inventory {
      * <p>
      * @param gadget 		Name of the gadget to check if available
      * @return 	‘false’ if the gadget is missing, and ‘true’ otherwise
+	 *
+	 * @pre: none
+	 * @post: gadges.size() == @pre(gadges.size()-1)
      */
-	boolean getItem(String gadget){
+	public boolean getItem(String gadget){
 		//TODO: Implement this
 		return true;
 	}
@@ -51,5 +59,17 @@ public class Inventory {
 	 */
 	public void printToFile(String filename){
 		//TODO: Implement this
+	}
+
+	/**
+	 * Private method, returns the current size of the inventory.
+	 *
+	 * @return size		int representation of the current size
+	 *
+	 * @inv: @return == gadgets.size()
+	 */
+	private int getSize() {
+		//TODO: Implement this
+		return 0;
 	}
 }

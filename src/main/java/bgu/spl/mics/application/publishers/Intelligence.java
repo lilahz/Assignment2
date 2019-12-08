@@ -1,7 +1,7 @@
 package main.java.bgu.spl.mics.application.publishers;
 
-import bgu.spl.mics.Publisher;
-import bgu.spl.mics.Subscriber;
+import main.java.bgu.spl.mics.Publisher;
+import main.java.bgu.spl.mics.Subscriber;
 
 /**
  * A Publisher only.

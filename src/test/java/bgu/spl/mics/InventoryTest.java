@@ -11,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class InventoryTest {
     private Inventory inventory;
-    private String[] gadges;
+    private String[] gadgets;
     @BeforeEach
     public void setUp(){
         inventory = Inventory.getInstance();
         // Load string array for test.
-        gadges = new String[]{"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses",
+        gadgets = new String[]{"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses",
                 "Dagger shoe"};
-        inventory.load(gadges);
+        inventory.load(gadgets);
     }
 
     //=============================================getInstance Tests====================================================
@@ -38,8 +38,6 @@ public class InventoryTest {
      * Check if after load, all the items exist in the inventory.
      */
     @Test public void testLoadInventory() {
-        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
-        inventory.load(gadges);
         assertTrue(inventory.getItem("Sky Hook"));
         assertTrue(inventory.getItem("Explosive Pen"));
         assertTrue(inventory.getItem("X-ray glasses"));
@@ -51,8 +49,6 @@ public class InventoryTest {
      * Negative test.
      */
     @Test public void testNegativeLoad() {
-        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
-        inventory.load(gadges);
         assertFalse(inventory.getItem("Dagger shoe"));
     }
 
@@ -62,8 +58,6 @@ public class InventoryTest {
      * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
      */
     @Test public void testExistItem(){
-        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
-        inventory.load(gadges);
         String gadget = "Sky Hook";
         assertTrue(inventory.getItem(gadget));
     }
@@ -74,9 +68,18 @@ public class InventoryTest {
      * Negative test.
      */
     @Test public void testNonExistItem() {
-        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
-        inventory.load(gadges);
         String gadget = "gadget";
+        assertFalse(inventory.getItem(gadget));
+    }
+
+    /**
+     * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
+     * Make Sure item is removed after one call for getItem.
+     * Negative test.
+     */
+    @Test public void testTwiceGetItem() {
+        String gadget = "Sky Hook";
+        inventory.getItem(gadget);
         assertFalse(inventory.getItem(gadget));
     }
 }

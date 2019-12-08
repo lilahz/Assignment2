@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SquadTest {
     private Squad squad;
     Agent[] agents;
+
     @BeforeEach
     public void setUp(){
         squad = Squad.getInstance();

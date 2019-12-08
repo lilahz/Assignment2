@@ -1,0 +1,44 @@
+-------------------------------------------------------------------------------
+Test set: test.java.bgu.spl.mics.SquadTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 10, Skipped: 0, Time elapsed: 0 s <<< FAILURE! - in test.java.bgu.spl.mics.SquadTest
+testGetNamesNegative  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testGetNegative  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testGetNames  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testSendAgents  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testGetAcquired  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testRealease  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testGetAgents  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testLoadInventory  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testNegativeLoad  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+
+testSameSquad  Time elapsed: 0 s  <<< ERROR!
+java.lang.NullPointerException
+	at test.java.bgu.spl.mics.SquadTest.setUp(SquadTest.java:30)
+

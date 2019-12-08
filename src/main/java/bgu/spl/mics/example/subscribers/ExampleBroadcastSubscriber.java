@@ -1,7 +1,7 @@
 package main.java.bgu.spl.mics.example.subscribers;
 
-import bgu.spl.mics.Subscriber;
-import bgu.spl.mics.example.messages.ExampleBroadcast;
+import main.java.bgu.spl.mics.Subscriber;
+import main.java.bgu.spl.mics.example.messages.ExampleBroadcast;
 
 public class ExampleBroadcastSubscriber extends Subscriber {
 

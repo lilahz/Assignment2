@@ -1,6 +1,6 @@
 package main.java.bgu.spl.mics.application.subscribers;
 
-import bgu.spl.mics.Subscriber;
+import main.java.bgu.spl.mics.Subscriber;
 
 /**
  * M handles ReadyEvent - fills a report and sends agents to mission.

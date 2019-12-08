@@ -36,7 +36,7 @@ public abstract class Subscriber extends RunnableSubPub {
      * <p>
      * For a received message {@code m} of type {@code type = m.getClass()}
      * calling the callback {@code callback} means running the method
-     * {@link Callback#call(java.lang.Object)} by calling
+     * {@link Callback#call(Object)} by calling
      * {@code callback.call(m)}.
      * <p>
      * @param <E>      The type of event to subscribe to.
@@ -61,7 +61,7 @@ public abstract class Subscriber extends RunnableSubPub {
      * <p>
      * For a received message {@code m} of type {@code type = m.getClass()}
      * calling the callback {@code callback} means running the method
-     * {@link Callback#call(java.lang.Object)} by calling
+     * {@link Callback#call(Object)} by calling
      * {@code callback.call(m)}.
      * <p>
      * @param <B>      The type of broadcast message to subscribe to

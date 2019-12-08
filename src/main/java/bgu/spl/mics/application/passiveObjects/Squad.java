@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Passive data-object representing an information about an agent in MI6.
+ * Passive data-object representing a information about an agent in MI6.
  * You must not alter any of the given public methods of this class. 
  * <p>
  * You may add ONLY private fields and methods to this class.
@@ -23,10 +23,10 @@ public class Squad {
 	/**
 	 * Initializes the squad. This method adds all the agents to the squad.
 	 * <p>
-	 * @param inventory 	Data structure containing all data necessary for initialization
+	 * @param agents 	Data structure containing all data necessary for initialization
 	 * 						of the squad.
 	 */
-	public void load (Agent[] inventory) {
+	public void load (Agent[] agents) {
 		// TODO Implement this
 	}
 
@@ -49,9 +49,6 @@ public class Squad {
 	 * acquires an agent, i.e. holds the agent until the caller is done with it
 	 * @param serials   the serial numbers of the agents
 	 * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
-	 *
-	 * @pre: agents != null
-	 * @post: all the agents that we need are acquired.
 	 */
 	public boolean getAgents(List<String> serials){
 		// TODO Implement this

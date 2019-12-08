@@ -14,8 +14,8 @@ public class InventoryTest {
     private String[] gadges;
     @BeforeEach
     public void setUp(){
-        // Inventory instance
         inventory = Inventory.getInstance();
+        // Load string array for test.
         gadges = new String[]{"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses",
                 "Dagger shoe"};
         inventory.load(gadges);
@@ -25,8 +25,6 @@ public class InventoryTest {
     /**
      * Test method for {@link Inventory#getInstance()}
      * Make sure that if we call getInstance(), we get the same Inventory.
-     *
-     * @return true since Inventory is a thread-safe singleton
      */
     @Test public void testSameInventory() {
         Inventory inventory2 = Inventory.getInstance();
@@ -35,61 +33,50 @@ public class InventoryTest {
 
     //================================================load Tests========================================================
 
+    /**
+     * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#load(String[])}
+     * Check if after load, all the items exist in the inventory.
+     */
+    @Test public void testLoadInventory() {
+        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
+        inventory.load(gadges);
+        assertTrue(inventory.getItem("Sky Hook"));
+        assertTrue(inventory.getItem("Explosive Pen"));
+        assertTrue(inventory.getItem("X-ray glasses"));
+    }
 
     /**
      * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#load(String[])}
-     * Check if after load, the size of the inventory is right.
-     *
-     * @reutrn true
+     * Check if after load, non-existing object does not exist in the inventory.
+     * Negative test.
      */
-    @Test public void testLoadInventory() {
-        assertTrue(gadges.length == inventory.getSize());
+    @Test public void testNegativeLoad() {
+        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
+        inventory.load(gadges);
+        assertFalse(inventory.getItem("Dagger shoe"));
     }
 
     //==============================================getItem Tests=======================================================
 
     /**
      * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
-     *
-     * @return true since the given object should exist.
      */
     @Test public void testExistItem(){
+        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
+        inventory.load(gadges);
         String gadget = "Sky Hook";
         assertTrue(inventory.getItem(gadget));
     }
 
+
     /**
      * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
      * Negative test.
-     *
-     * @return false since the given object shouldn't exist.
      */
     @Test public void testNonExistItem() {
+        gadges = new String[] {"Sky Hook", "Explosive Pen", "Geiger counter", "X-ray glasses"};
+        inventory.load(gadges);
         String gadget = "gadget";
         assertFalse(inventory.getItem(gadget));
-    }
-
-    /**
-     * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
-     * Test if after one call, gadget is really removed from list.
-     * Negative test.
-     *
-     * @return false since the object should be removed.
-     */
-    @Test public void testAfterOneGet() {
-        String gadget = "Explosive Pen";
-        inventory.getItem(gadget);
-        assertFalse(inventory.getItem(gadget));
-    }
-
-    /**
-     * Test method for {@link main.java.bgu.spl.mics.application.passiveObjects.Inventory#getItem(String)}
-     * Test if function returns false when the list is empty
-     * Negative test.
-     *
-     * @return false since the list is empty
-     */
-    @Test public void testEmptyList() {
-
     }
 }

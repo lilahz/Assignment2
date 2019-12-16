@@ -1,8 +1,8 @@
 package main.java.bgu.spl.mics.example;
 
-import main.java.bgu.spl.mics.example.subscribers.ExampleBroadcastSubscriber;
-import main.java.bgu.spl.mics.example.publishers.ExampleMessageSender;
-import main.java.bgu.spl.mics.example.subscribers.ExampleEventHandlerSubscriber;
+import bgu.spl.mics.example.subscribers.ExampleBroadcastSubscriber;
+import bgu.spl.mics.example.publishers.ExampleMessageSender;
+import bgu.spl.mics.example.subscribers.ExampleEventHandlerSubscriber;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

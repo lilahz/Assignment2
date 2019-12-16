@@ -56,14 +56,14 @@ public class MissionInfo {
 	}
 
     /**
-     * Sets the time the mission was issued in milliseconds.
+     * Sets the time the mission was issued in time ticks.
      */
     public void setTimeIssued(int timeIssued) {
         // TODO Implement this
     }
 
 	/**
-     * Retrieves the time the mission was issued in milliseconds.
+     * Retrieves the time the mission was issued in time ticks.
      */
 	public int getTimeIssued() {
 		// TODO Implement this

@@ -3,14 +3,15 @@ package main.java.bgu.spl.mics.application.subscribers;
 import bgu.spl.mics.Subscriber;
 
 /**
- * Q is the only Subscriber\Publisher that has access to the {@link bgu.spl.mics.application.passiveObjects.Inventory}.
+ * A Publisher\Subscriber.
+ * Holds a list of Info objects and sends them
  *
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class Q extends Subscriber {
+public class Intelligence extends Subscriber {
 
-	public Q() {
+	public Intelligence() {
 		super("Change_This_Name");
 		// TODO Implement this
 	}
@@ -18,7 +19,5 @@ public class Q extends Subscriber {
 	@Override
 	protected void initialize() {
 		// TODO Implement this
-		
 	}
-
 }

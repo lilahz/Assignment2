@@ -2,10 +2,10 @@ package main.java.bgu.spl.mics.example.publishers;
 
 import java.util.concurrent.TimeUnit;
 
-import main.java.bgu.spl.mics.Future;
-import main.java.bgu.spl.mics.Subscriber;
-import main.java.bgu.spl.mics.example.messages.ExampleBroadcast;
-import main.java.bgu.spl.mics.example.messages.ExampleEvent;
+import bgu.spl.mics.Future;
+import bgu.spl.mics.Subscriber;
+import bgu.spl.mics.example.messages.ExampleBroadcast;
+import bgu.spl.mics.example.messages.ExampleEvent;
 
 public class ExampleMessageSender extends Subscriber {
 

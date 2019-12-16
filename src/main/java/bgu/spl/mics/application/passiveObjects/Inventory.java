@@ -28,7 +28,10 @@ public class Inventory {
      * 						of the inventory.
      */
 	public void load (String[] inventory) {
-		//TODO: Implement this
+		for (int i=0; i<gadgets.size();i++)
+		{
+			gadgets.add(inventory[i]);
+		}
 	}
 	
 	/**

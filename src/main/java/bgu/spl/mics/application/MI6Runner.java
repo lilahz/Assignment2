@@ -1,8 +1,5 @@
 package main.java.bgu.spl.mics.application;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -30,25 +27,24 @@ public class MI6Runner {
         Inventory inventory = Inventory.getInstance();
         Squad squad = Squad.getInstance();
 
-        try {
-            Object j = new JSONParser().parse(new FileReader(args[0]));
-            JSONObject jo = (JSONObject) j;
-//            inventory.load(getGadgets(jo));
-            squad.load(getAgents(jo));
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-
-        //TODO: change to GSON if nessecary else delete all the lines
-//        Gson gson = new Gson();
 //        try {
-//            JsonReader reader = new JsonReader(new FileReader(args[0]));
-//            JsonParser parser = gson.fromJson(reader, JsonParser.class);
-//
-//            String[] gadgets=  gson.fromJson(reader, String[].class);
-//        } catch (FileNotFoundException e) {
+//            Object j = new JSONParser().parse(new FileReader(args[0]));
+//            JSONObject jo = (JSONObject) j;
+////            inventory.load(getGadgets(jo));
+////            squad.load(getAgents(jo));
+//        } catch (IOException | ParseException e) {
 //            e.printStackTrace();
 //        }
+
+//        TODO: change to GSON if nessecary else delete all the lines
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        InputStream inputStream = MI6Runner.class.getClassLoader().getResourceAsStream(args[0]);
+        Reader reader = new InputStreamReader(inputStream);
+        JsonElement element = parser.parse(reader);
+        JsonObject object = element.getAsJsonObject();
+        JsonArray array = object.getAsJsonArray("inventory");
+        String[] gadgets = new String[array.size()];
     }
 
     /**
@@ -66,14 +62,16 @@ public class MI6Runner {
         return gadgets;
     }
 
-    public static Agent[] getAgents(JSONObject j) {
-        JSONArray squad = (JSONArray) j.get("squad");
-        Agent[] agents = new Agent[squad.size()];
-        for (int i = 0; i < squad.size(); i++) {
-            Map tmp = (Map) squad.get(i);
-            String[] tmpArr = new String[tmp.size()];
-            Agent agent = new Agent();
-        }
-        return agents;
-    }
+//    public static Agent[] getAgents(JSONObject j) {
+//        JSONArray squad = (JSONArray) j.get("squad");
+//        Agent[] agents = new Agent[squad.size()];
+//        for (int i = 0; i < squad.size(); i++) {
+//            JSONObject tmp = (JSONObject) squad.get(i);
+//            Agent agent = new Agent();
+//            System.out.println(tmp.get("name"));
+//            agent.setSerialNumber((String) tmp.get(0));
+//            agent.setName(tmp.get(1));
+//        }
+//        return agents;
+//    }
 }

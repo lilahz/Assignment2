@@ -1,4 +1,6 @@
 package main.java.bgu.spl.mics.application.passiveObjects;
+import main.java.bgu.spl.mics.MessageBrokerImpl;
+
 import java.util.List;
 import java.util.Map;
 
@@ -9,15 +11,19 @@ import java.util.Map;
  * You may add ONLY private fields and methods to this class.
  */
 public class Squad {
-
 	private Map<String, Agent> agents;
 
+	private static class singleHolder2{
+		private static Squad instance = new Squad();
+	}
+	private Squad(){
+		//initialize
+	}
 	/**
 	 * Retrieves the single instance of this class.
 	 */
 	public static Squad getInstance() {
-		//TODO: Implement this
-		return null;
+		return singleHolder2.instance;
 	}
 
 	/**
@@ -27,7 +33,7 @@ public class Squad {
 	 * 						of the squad.
 	 */
 	public void load (Agent[] agents) {
-		// TODO Implement this
+
 	}
 
 	/**

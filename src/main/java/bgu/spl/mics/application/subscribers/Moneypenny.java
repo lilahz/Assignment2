@@ -1,6 +1,9 @@
 package main.java.bgu.spl.mics.application.subscribers;
 
 import main.java.bgu.spl.mics.Subscriber;
+import main.java.bgu.spl.mics.application.messages.AgentAvailableEvent;
+import main.java.bgu.spl.mics.application.passiveObjects.Agent;
+import main.java.bgu.spl.mics.application.passiveObjects.Squad;
 
 /**
  * Only this type of Subscriber can access the squad.
@@ -10,6 +13,7 @@ import main.java.bgu.spl.mics.Subscriber;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class Moneypenny extends Subscriber {
+	Squad squad = Squad.getInstance();
 
 	public Moneypenny(int id) {
 		super("M" + id);
@@ -18,7 +22,15 @@ public class Moneypenny extends Subscriber {
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		subscribeEvent(AgentAvailableEvent.class, (callBack) ->{
+			synchronized (squad) {
+				if (squad.getAgents(callBack.getAgentList())) {
+					// TODO: add more stuff: gadget available
+					// to get from M if to release or to send Agents.
+					//squad.sendAgents(callBack.getAgentList(), callBack.getDuration());
+				}
+			}
+		});
 		
 	}
 

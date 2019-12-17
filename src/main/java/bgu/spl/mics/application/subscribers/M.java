@@ -11,28 +11,25 @@ import main.java.bgu.spl.mics.application.messages.AgentAvailableEvent;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class M extends Subscriber {
-	MessageBrokerImpl messageBroker = (MessageBrokerImpl) MessageBrokerImpl.getInstance();
-	private SimplePublisher simplePublisher = getSimplePublisher();
-
 	public M(int id) {
 		super("M" + id);
 		// TODO Implement this
 	}
 
 	@Override
+	/**
+	 * Subscribes to A
+	 */
 	protected void initialize() {
-		Callback<MissionReceivedEvent> callback = new Callback<MissionReceivedEvent>() {
-			@Override
-			public void call(MissionReceivedEvent c) {
-				/**
-				 * Send message to find out if there are any available agents
-				 */
-				Event<AgentAvailableEvent> agentAvailableEventEvent = new AgentAvailableEvent();
-				Future<AgentAvailableEvent> future = simplePublisher.sendEvent(agentAvailableEventEvent);
-
-
-			}
+		Callback<MissionReceivedEvent> callback = c -> {
+			/**
+			 * Send message to find out if there are any available agents
+			 */
+			Event<AgentAvailableEvent> agentAvailableEventEvent =
+					new AgentAvailableEvent(c.getSerialAgentsNumbers(), c.getDuration());
+			Future<AgentAvailableEvent> future = getSimplePublisher().sendEvent(agentAvailableEventEvent);
 		};
+		// TODO do we need to add antoher callback for gadget avilable event
 		this.subscribeEvent(MissionReceivedEvent.class, callback);
 	}
 

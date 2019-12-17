@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Passive data-object representing a information about an agent in MI6.
  * You must not alter any of the given public methods of this class. 
@@ -59,6 +61,12 @@ public class Squad {
 	 */
 	public void sendAgents(List<String> serials, int time){
 		// TODO: find out how to convert time ticks to milliseconds
+		try {
+			sleep(time * 100);
+			releaseAgents(serials);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

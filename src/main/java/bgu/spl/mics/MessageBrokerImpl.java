@@ -98,7 +98,7 @@ public class MessageBrokerImpl implements MessageBroker {
 		//we will add to the messageQ of the first subscriber in the Type of event in eventsmap
 		//and we will take him out of the Q and insert him again(round robin).
 		Future<T> output = new Future<>();
-		if (eventsMap.containsKey(e)){
+		if (eventsMap.containsKey(e.getClass())){
 			RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
 			if (temp != null){
 				subsMap.get(temp).add(e);

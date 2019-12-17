@@ -1,7 +1,10 @@
 package main.java.bgu.spl.mics.application.passiveObjects;
 
+import com.google.gson.Gson;
 import main.java.bgu.spl.mics.MessageBrokerImpl;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,8 +20,9 @@ import java.util.List;
  */
 public class Inventory {
 	private List<String> gadgets;
+
 	/**
-	 * Initializes new Message Broker instance
+	 * Initializes new Inventory instance
 	 */
 	private static class singleHolder{
 		private static Inventory instance = new Inventory();
@@ -27,8 +31,8 @@ public class Inventory {
 	/**
 	 * Constructor
 	 */
-	private Inventory(){
-	}
+	private Inventory(){}
+
 	/**
      * Retrieves the single instance of this class.
      */
@@ -45,7 +49,7 @@ public class Inventory {
      */
 	public void load (String[] inventory) {
 		gadgets = Collections.synchronizedList(new ArrayList<>());
-		for (int i=0; i<inventory.length;i++)
+		for (int i = 0; i < inventory.length; i++)
 		{
 			gadgets.add(inventory[i]);
 		}
@@ -57,19 +61,27 @@ public class Inventory {
      * @param gadget 		Name of the gadget to check if available
      * @return 	‘false’ if the gadget is missing, and ‘true’ otherwise
      */
-	public boolean getItem(String gadget){
-		//TODO: Implement this
-		return true;
+	public synchronized boolean getItem(String gadget){
+		if (gadgets.contains(gadget)) {
+			gadgets.remove(gadget);
+			return true;
+		}
+		return false;
 	}
 
 	/**
 	 *
 	 * <p>
 	 * Prints to a file name @filename a serialized object List<String> which is a
-	 * list of all the of the gadgeds.
-	 * This method is called by the main method in order to generate the output.
+	 * list of all the of the gadgets.
+	 * This method is called by the main method in order to gen`erate the output.
 	 */
 	public void printToFile(String filename){
-		//TODO: Implement this
+		Gson gson = new Gson();
+		try {
+			gson.toJson(gadgets, new FileWriter(filename));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

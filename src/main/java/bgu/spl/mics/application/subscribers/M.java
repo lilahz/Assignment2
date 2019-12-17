@@ -1,10 +1,8 @@
 package main.java.bgu.spl.mics.application.subscribers;
 
-import main.java.bgu.spl.mics.Event;
-import main.java.bgu.spl.mics.Subscriber;
-import main.java.bgu.spl.mics.application.messages.missionReceivedEvent;
-
-import java.util.Queue;
+import main.java.bgu.spl.mics.*;
+import main.java.bgu.spl.mics.application.messages.MissionReceivedEvent;
+import main.java.bgu.spl.mics.application.messages.AgentAvailableEvent;
 
 /**
  * M handles ReadyEvent - fills a report and sends agents to mission.
@@ -13,6 +11,9 @@ import java.util.Queue;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class M extends Subscriber {
+	MessageBrokerImpl messageBroker = (MessageBrokerImpl) MessageBrokerImpl.getInstance();
+	private SimplePublisher simplePublisher = getSimplePublisher();
+
 	public M(int id) {
 		super("M" + id);
 		// TODO Implement this
@@ -20,8 +21,19 @@ public class M extends Subscriber {
 
 	@Override
 	protected void initialize() {
+		Callback<MissionReceivedEvent> callback = new Callback<MissionReceivedEvent>() {
+			@Override
+			public void call(MissionReceivedEvent c) {
+				/**
+				 * Send message to find out if there are any available agents
+				 */
+				Event<AgentAvailableEvent> agentAvailableEventEvent = new AgentAvailableEvent();
+				Future<AgentAvailableEvent> future = simplePublisher.sendEvent(agentAvailableEventEvent);
 
-		
+
+			}
+		};
+		this.subscribeEvent(MissionReceivedEvent.class, callback);
 	}
 
 

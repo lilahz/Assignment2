@@ -1,6 +1,7 @@
 package main.java.bgu.spl.mics.application.subscribers;
 
 import main.java.bgu.spl.mics.Subscriber;
+import main.java.bgu.spl.mics.application.passiveObjects.MissionInfo;
 
 /**
  * A Publisher\Subscriber.
@@ -10,14 +11,22 @@ import main.java.bgu.spl.mics.Subscriber;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class Intelligence extends Subscriber {
+	private MissionInfo[] missions;
 
-	public Intelligence() {
-		super("Change_This_Name");
-		// TODO Implement this
+	public Intelligence(int id) {
+		super("Intelligence" + id);
 	}
 
 	@Override
 	protected void initialize() {
 		// TODO Implement this
+	}
+
+	public void load(MissionInfo[] missions) {
+		this.missions = missions;
+	}
+
+	public MissionInfo[] getMissions() {
+		return missions;
 	}
 }

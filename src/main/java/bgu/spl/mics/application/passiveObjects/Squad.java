@@ -1,8 +1,10 @@
 package main.java.bgu.spl.mics.application.passiveObjects;
 import main.java.bgu.spl.mics.MessageBrokerImpl;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Passive data-object representing a information about an agent in MI6.
@@ -33,6 +35,10 @@ public class Squad {
 	 * 						of the squad.
 	 */
 	public void load (Agent[] agents) {
+		this.agents = new ConcurrentHashMap<String, Agent>();
+		for (int i=0; i<agents.length; i++){
+			this.agents.put(agents[i].getSerialNumber(), agents[i]);
+		}
 
 	}
 

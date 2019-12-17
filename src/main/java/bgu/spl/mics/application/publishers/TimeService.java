@@ -12,10 +12,11 @@ import main.java.bgu.spl.mics.Publisher;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class TimeService extends Publisher {
+	int duration;
 
-	public TimeService() {
-		super("Change_This_Name");
-		// TODO Implement this
+	public TimeService(int duration) {
+		super("Time");
+		this.duration = duration;
 	}
 
 	@Override

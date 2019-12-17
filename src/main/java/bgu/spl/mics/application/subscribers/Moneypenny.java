@@ -11,8 +11,8 @@ import main.java.bgu.spl.mics.Subscriber;
  */
 public class Moneypenny extends Subscriber {
 
-	public Moneypenny() {
-		super("Change_This_Name");
+	public Moneypenny(int id) {
+		super("M" + id);
 		// TODO Implement this
 	}
 

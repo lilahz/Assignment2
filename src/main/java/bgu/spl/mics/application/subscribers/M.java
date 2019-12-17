@@ -13,15 +13,14 @@ import java.util.Queue;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class M extends Subscriber {
-//	private Queue<missionReceivedEvent> MissonsQ;
-	public M() {
-		super("M");
+	public M(int id) {
+		super("M" + id);
 		// TODO Implement this
 	}
 
 	@Override
 	protected void initialize() {
-		this.
+
 		
 	}
 

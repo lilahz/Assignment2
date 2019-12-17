@@ -1,5 +1,10 @@
 package main.java.bgu.spl.mics.application.passiveObjects;
 
+import main.java.bgu.spl.mics.MessageBrokerImpl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,11 +18,22 @@ import java.util.List;
 public class Inventory {
 	private List<String> gadgets;
 	/**
+	 * Initializes new Message Broker instance
+	 */
+	private static class singleHolder{
+		private static Inventory instance = new Inventory();
+	}
+
+	/**
+	 * Constructor
+	 */
+	private Inventory(){
+	}
+	/**
      * Retrieves the single instance of this class.
      */
 	public static Inventory getInstance() {
-		//TODO: Implement this
-		return null;
+		return singleHolder.instance;
 	}
 
 	/**
@@ -28,7 +44,8 @@ public class Inventory {
      * 						of the inventory.
      */
 	public void load (String[] inventory) {
-		for (int i=0; i<gadgets.size();i++)
+		gadgets = Collections.synchronizedList(new ArrayList<>());
+		for (int i=0; i<inventory.length;i++)
 		{
 			gadgets.add(inventory[i]);
 		}

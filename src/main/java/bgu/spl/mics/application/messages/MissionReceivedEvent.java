@@ -12,14 +12,20 @@ public class MissionReceivedEvent implements Event {
     private String missionName;
     private int timeExpired;
     private int timeIssued;
+    private int timeSent ;
 
-    public MissionReceivedEvent(MissionInfo missionInfo) {
+    public MissionReceivedEvent(MissionInfo missionInfo , int timeSent) {
         serialAgentsNumbers = missionInfo.getSerialAgentsNumbers();
         duration = missionInfo.getDuration();
         gadget = missionInfo.getGadget();
         missionName = missionInfo.getMissionName();
         timeExpired = missionInfo.getTimeExpired();
         timeIssued = missionInfo.getTimeIssued();
+        this.timeSent = timeSent;
+    }
+
+    public int getTimeSent() {
+        return timeSent;
     }
 
     public List<String> getSerialAgentsNumbers() {

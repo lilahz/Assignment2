@@ -1,6 +1,7 @@
 package main.java.bgu.spl.mics.application.subscribers;
 
 import main.java.bgu.spl.mics.*;
+import main.java.bgu.spl.mics.application.messages.MissionReceivedEvent;
 import main.java.bgu.spl.mics.application.messages.TickBroadcast;
 import main.java.bgu.spl.mics.application.passiveObjects.MissionInfo;
 
@@ -32,7 +33,7 @@ public class Intelligence extends Subscriber {
 			currentTick = callBack.getCurrentTick();
 			while (!sortedMissions.isEmpty()) {
 				if (sortedMissions.get(0).getTimeIssued() == currentTick) {
-					getSimplePublisher().sendEvent((Event) sortedMissions.remove(0));
+					getSimplePublisher().sendEvent(new MissionReceivedEvent(sortedMissions.remove(0), currentTick));
 				}
 			}
 		});

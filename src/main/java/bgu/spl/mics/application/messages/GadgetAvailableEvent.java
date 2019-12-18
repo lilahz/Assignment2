@@ -4,12 +4,17 @@ import main.java.bgu.spl.mics.Event;
 
 public class GadgetAvailableEvent implements Event {
     private String gadget;
+    private int time;
 
-    public GadgetAvailableEvent(String gadget) {
+    public GadgetAvailableEvent(String gadget, int time) {
         this.gadget = gadget;
     }
 
     public String getGadget() {
         return gadget;
+    }
+
+    public int getTime() {
+        return time;
     }
 }

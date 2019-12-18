@@ -21,6 +21,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	private Map<Class<? extends Message>, ConcurrentLinkedQueue<RunnableSubPub>> broadcastsMap;
 	//Map of Future objects and the events it represents.
 	private Map<Event<?>, Future<?>> futureMap;
+
 	/**
 	 * Initializes new Message Broker instance
 	 */
@@ -100,7 +101,7 @@ public class MessageBrokerImpl implements MessageBroker {
 		Future<T> output = new Future<>();
 		if (eventsMap.containsKey(e.getClass())){
 			RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
-			if (temp != null){
+			if (temp != null) {
 				subsMap.get(temp).add(e);
 				eventsMap.get(e.getClass()).add(temp);
 			}
@@ -149,6 +150,21 @@ public class MessageBrokerImpl implements MessageBroker {
 		}
 	}
 
+	/**
+	 * Using this method, a <b>registered</b> Subscriber can take message
+	 * from its allocated queue.
+	 * This method is blocking meaning that if no messages
+	 * are available in the Subscriber queue it
+	 * should wait until a message becomes available.
+	 * The method should throw the {@link IllegalStateException} in the case
+	 * where {@code m} was never registered.
+	 * <p>
+	 * @param s The Subscriber requesting to take a message from its message
+	 *          queue.
+	 * @return The next message in the {@code m}'s queue (blocking).
+	 * @throws InterruptedException if interrupted while waiting for a message
+	 *                              to became available.
+	 */
 	@Override
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
 		LinkedBlockingQueue tmp = subsMap.get(m);

@@ -43,11 +43,11 @@ public class M extends Subscriber {
 			moneyPennyIdFuture = getSimplePublisher().sendEvent(
 					new AgentAvailableEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration()));
 			// If the agents are available
-			if (moneyPennyIdFuture.get() != null) {
+			if (moneyPennyIdFuture.isDone()) {
 				// Check if the gadget is also available for the mission
 				qTimeFuture = getSimplePublisher().sendEvent(
 						new GadgetAvailableEvent(callBack.getGadget(), currentTick));
-				if (qTimeFuture.get() != null) {
+				if (qTimeFuture.isDone()) {
 					// Check if the time hasn't expired
 					if (callBack.getTimeExpired() >= currentTick + callBack.getDuration()) {
 						agentNamesFuture = getSimplePublisher().sendEvent(
@@ -61,6 +61,12 @@ public class M extends Subscriber {
 								new AgentReleaseEvent(callBack.getSerialAgentsNumbers())
 						);
 					}
+				}
+				// If gadget is not available abort mission and release agents
+				else {
+					Future<Boolean> abortMission = getSimplePublisher().sendEvent(
+							new AgentReleaseEvent(callBack.getSerialAgentsNumbers())
+					);
 				}
 			}
 			diary.incrementTotal();

@@ -2,7 +2,6 @@ package main.java.bgu.spl.mics;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Subscriber is an abstract class that any subscriber in the system
@@ -61,7 +60,6 @@ public abstract class Subscriber extends RunnableSubPub {
         }
         messageBroker.subscribeEvent(type, this);
     }
-    //TODO : fucking understand what we wrote here.
 
     /**
      * Subscribes to broadcast message of type {@code type} with the callback
@@ -112,6 +110,7 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     protected final void terminate() {
         this.terminated = true;
+        messageBroker.unregister(this);
     }
 
     /**
@@ -126,9 +125,7 @@ public abstract class Subscriber extends RunnableSubPub {
             while (!terminated) {
 
                 Message msg = messageBroker.awaitMessage(this);
-                callsMap.get(msg).call(msg);
-
-                System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
+                callsMap.get(msg.getClass()).call(msg);
             }
         } catch (InterruptedException e) {
             terminated = true;

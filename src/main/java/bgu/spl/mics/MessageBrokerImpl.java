@@ -52,7 +52,6 @@ public class MessageBrokerImpl implements MessageBroker {
 		if (!eventsMap.containsKey(type)) {
 			ConcurrentLinkedQueue tmp = new ConcurrentLinkedQueue();
 			tmp.add(m);
-			// TODO: maybe change to putIfAbscent? and then remove the condition
 			eventsMap.put(type, tmp);
 		}
 		// Else, the type exist and add m to the Q.
@@ -95,20 +94,22 @@ public class MessageBrokerImpl implements MessageBroker {
 
 	
 	@Override
-	public <T> Future<T> sendEvent(Event<T> e) {
+	public synchronized <T> Future<T> sendEvent(Event<T> e) {
 		//we will add to the messageQ of the first subscriber in the Type of event in eventsmap
 		//and we will take him out of the Q and insert him again(round robin).
-		Future<T> output = new Future<>();
+		Future<T> output = new Future<>();;
 		if (eventsMap.containsKey(e.getClass())){
 			RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
 			if (temp != null) {
 				subsMap.get(temp).add(e);
 				eventsMap.get(e.getClass()).add(temp);
+				futureMap.put(e,output);
 			}
 			else return null;
-
 		}
-		futureMap.put(e,output);
+		else {
+			return null;
+		}
 		return output;
 	}
 
@@ -135,19 +136,21 @@ public class MessageBrokerImpl implements MessageBroker {
 	 */
 	@Override
 	public void unregister(Subscriber m) {
+		for (Class<? extends Message> e : eventsMap.keySet()) {
+			if (eventsMap.get(e).contains(m)) {
+				synchronized (eventsMap.get(e)) {
+					eventsMap.get(e).remove(m);
+				}
+			}
+		}
+		for (Class<? extends Message> e : broadcastsMap.keySet()) {
+			if (broadcastsMap.get(e).contains(m)) {
+				synchronized (broadcastsMap.get(e)) {
+					broadcastsMap.get(e).remove(m);
+				}
+			}
+		}
 		subsMap.remove(m, subsMap.get(m));
-		for (int i = 0; i < eventsMap.size(); i++) {
-			if (eventsMap.get(i).contains(m))
-				synchronized (eventsMap.get(i)) {
-					eventsMap.get(i).remove(m);
-				}
-		}
-		for (int j = 0; j < broadcastsMap.size(); j++) {
-			if (broadcastsMap.get(j).contains(m))
-				synchronized (broadcastsMap.get(j)) {
-					broadcastsMap.get(j).remove(m);
-				}
-		}
 	}
 
 	/**
@@ -159,7 +162,7 @@ public class MessageBrokerImpl implements MessageBroker {
 	 * The method should throw the {@link IllegalStateException} in the case
 	 * where {@code m} was never registered.
 	 * <p>
-	 * @param s The Subscriber requesting to take a message from its message
+	 * @param m The Subscriber requesting to take a message from its message
 	 *          queue.
 	 * @return The next message in the {@code m}'s queue (blocking).
 	 * @throws InterruptedException if interrupted while waiting for a message
@@ -168,6 +171,9 @@ public class MessageBrokerImpl implements MessageBroker {
 	@Override
 	public Message awaitMessage(Subscriber m) throws InterruptedException {
 		LinkedBlockingQueue tmp = subsMap.get(m);
+		if (tmp == null){
+			throw new InterruptedException("no subscriber has registerd");
+		}
 		Message message = (Message) tmp.take();
 		return message;
 	}

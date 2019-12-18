@@ -2,6 +2,8 @@ package main.java.bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.sleep;
+
 /**
  * A Future object represents a promised result - an object that will
  * eventually be resolved to hold a result of some operation. The class allows
@@ -11,13 +13,13 @@ import java.util.concurrent.TimeUnit;
  * No public constructor is allowed except for the empty constructor.
  */
 public class Future<T> {
-	T result = null;
-	
+	T result;
+
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
-		//TODO: implement this
+		result = null;
 	}
 	
 	/**
@@ -29,23 +31,33 @@ public class Future<T> {
      * 	       
      */
 	public T get() {
-		//TODO: implement this.
-		return null;
+		synchronized (this) {
+			while (!isDone()) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
 	}
 	
 	/**
      * Resolves the result of this Future object.
      */
-	public void resolve (T result) {
-		this.result = result;
+	public synchronized void resolve (T result) {
+		synchronized (this) {
+			this.result = result;
+			this.notifyAll();
+		}
 	}
 	
 	/**
      * @return true if this object has been resolved, false otherwise
      */
 	public boolean isDone() {
-		//TODO: implement this.
-		return false;
+		return (result != null);
 	}
 	
 	/**
@@ -60,8 +72,14 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		//TODO: implement this.
-		return null;
+		synchronized (this) {
+			try {
+				this.wait(unit.toMillis(timeout));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
 	}
 
 }

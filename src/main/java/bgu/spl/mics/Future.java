@@ -13,13 +13,15 @@ import static java.lang.Thread.sleep;
  * No public constructor is allowed except for the empty constructor.
  */
 public class Future<T> {
-	T result;
+	private T result;
+	private boolean isDone;
 
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
 		result = null;
+		isDone = false;
 	}
 	
 	/**
@@ -34,7 +36,9 @@ public class Future<T> {
 		synchronized (this) {
 			while (!isDone()) {
 				try {
+
 					this.wait();
+					System.out.println("waiting");
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -46,9 +50,10 @@ public class Future<T> {
 	/**
      * Resolves the result of this Future object.
      */
-	public synchronized void resolve (T result) {
+	public void resolve (T result) {
 		synchronized (this) {
 			this.result = result;
+			isDone=true;
 			this.notifyAll();
 		}
 	}
@@ -57,7 +62,7 @@ public class Future<T> {
      * @return true if this object has been resolved, false otherwise
      */
 	public boolean isDone() {
-		return (result != null);
+		return isDone;
 	}
 	
 	/**
@@ -74,6 +79,7 @@ public class Future<T> {
 	public T get(long timeout, TimeUnit unit) {
 		synchronized (this) {
 			try {
+				System.out.println("waiting1");
 				this.wait(unit.toMillis(timeout));
 			} catch (InterruptedException e) {
 				e.printStackTrace();

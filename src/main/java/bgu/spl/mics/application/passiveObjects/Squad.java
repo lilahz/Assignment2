@@ -50,9 +50,15 @@ public class Squad {
 	 * Releases agents.
 	 */
 	public void releaseAgents(List<String> serials){
-		for (int i = 0; i < serials.size(); i++) {
-			agents.get(serials.get(i)).release();
+		System.out.println("here2");
+		synchronized (agents) {
+			for (int i = 0; i < serials.size(); i++) {
+				Agent agent = agents.get(serials.get(i));
+				agents.get(serials.get(i)).release();
+			}
+			agents.notifyAll();
 		}
+		System.out.println("Released all agents");
 	}
 
 	/**
@@ -62,8 +68,11 @@ public class Squad {
 	public void sendAgents(List<String> serials, int time){
 		// TODO: find out how to convert time ticks to milliseconds
 		try {
-			sleep(time * 100);
+			System.out.println("Sending agents to mission");
+			Thread.currentThread().sleep(time);
+			System.out.println("here");
 			releaseAgents(serials);
+			System.out.println("released agents");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -74,25 +83,65 @@ public class Squad {
 	 * @param serials   the serial numbers of the agents
 	 * @return ‘false’ if an agent of serialNumber ‘serial’ is missing, and ‘true’ otherwise
 	 */
-	public synchronized boolean getAgents(List<String> serials){
+	public boolean getAgents(List<String> serials){
+		serials.sort((a,b) -> Integer.parseInt(a) - Integer.parseInt(b));
+		System.out.println("Getting agents " + serials.toString());
 		for (int i = 0; i < serials.size(); i++) {
+			// If one of the given serials doesn't exist in the sqaud, return false
 			if (!agents.containsKey(serials.get(i))) {
 				return false;
 			}
-			else if (agents.get(serials.get(i)).isAvailable()) {
-				agents.get(serials.get(i)).acquire();
-			}
-			else {
-				while (!agents.get(serials.get(i)).isAvailable()) {
-					try {
-						this.wait();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+		}
+
+		synchronized (agents) {
+			try {
+				for (int j = 0; j < serials.size(); j++) {
+					if (!agents.get(serials.get(j)).isAvailable()) {
+						agents.wait();
 					}
 				}
-				agents.get(serials.get(i)).acquire();
+				for (int k = 0; k < serials.size(); k++) {
+					agents.get(serials.get(k)).acquire();
+					System.out.println("Acquired" + serials.get(k));;
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+//			else {
+//				synchronized (agents) {
+//					try {
+//						Agent agent = agents.get(serials.get(i));
+//						while (!agent.isAvailable()) {
+//							System.out.println("MoneyPenny Waiting for " + agent.getSerialNumber());
+//							agents.wait();
+//						}
+//						System.out.println("MoneyPenny acquired " + agent.getSerialNumber());
+//						agent.acquire();
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}
 		}
+//			else if (agents.get(serials.get(i)).isAvailable()) {
+//				synchronized (agents.get(serials.get(i))) {
+//					agents.get(serials.get(i)).acquire();
+//					System.out.println("Acquiring " + serials.get(i));
+//				}
+//			}
+//			else {
+//				while (!agents.get(serials.get(i)).isAvailable()) {
+//					synchronized (agents.get(serials.get(i))) {
+//						try {
+//							agents.get(serials.get(i)).wait();
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//				agents.get(serials.get(i)).acquire();
+//				System.out.println("Acquiring " + serials.get(i));
+//			}
 		return true;
 	}
 

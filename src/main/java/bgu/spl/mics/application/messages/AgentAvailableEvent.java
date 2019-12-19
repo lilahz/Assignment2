@@ -7,7 +7,7 @@ import main.java.bgu.spl.mics.application.passiveObjects.Agent;
 import java.util.List;
 import java.util.Map;
 
-public class AgentAvailableEvent implements Event {
+public class AgentAvailableEvent implements Event<Object[]> {
     private List<String> agentList;
     private int duration;
 

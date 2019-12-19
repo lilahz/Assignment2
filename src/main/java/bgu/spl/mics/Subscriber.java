@@ -110,7 +110,6 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     protected final void terminate() {
         this.terminated = true;
-        messageBroker.unregister(this);
     }
 
     /**
@@ -119,6 +118,7 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     @Override
     public final void run() {
+        System.out.println("Registering and initializing " + this.getName());
         messageBroker.register(this);
         initialize();
         try {
@@ -129,6 +129,7 @@ public abstract class Subscriber extends RunnableSubPub {
             }
         } catch (InterruptedException e) {
             terminated = true;
+            messageBroker.unregister(this);
         }
     }
 

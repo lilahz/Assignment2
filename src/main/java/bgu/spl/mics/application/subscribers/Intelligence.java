@@ -2,6 +2,7 @@ package main.java.bgu.spl.mics.application.subscribers;
 
 import main.java.bgu.spl.mics.*;
 import main.java.bgu.spl.mics.application.messages.MissionReceivedEvent;
+import main.java.bgu.spl.mics.application.messages.TerminateBroadcast;
 import main.java.bgu.spl.mics.application.messages.TickBroadcast;
 import main.java.bgu.spl.mics.application.passiveObjects.MissionInfo;
 
@@ -31,11 +32,24 @@ public class Intelligence extends Subscriber {
 	protected void initialize() {
 		subscribeBroadcast(TickBroadcast.class, (callBack)->{
 			currentTick = callBack.getCurrentTick();
-			while (!sortedMissions.isEmpty()) {
-				if (sortedMissions.get(0).getTimeIssued() == currentTick) {
-					getSimplePublisher().sendEvent(new MissionReceivedEvent(sortedMissions.remove(0), currentTick));
+			System.out.println("Intelligence - current time " + currentTick);
+			if (!sortedMissions.isEmpty()) {
+				MissionInfo tmp = sortedMissions.get(0);
+				while (tmp != null && tmp.getTimeIssued() == currentTick) {
+					sortedMissions.remove(0);
+					System.out.println("Intelligence - Starting mission " +tmp.getMissionName());
+					getSimplePublisher().sendEvent(new MissionReceivedEvent(tmp, currentTick));
+					if (sortedMissions.size() > 0){
+						tmp = sortedMissions.get(0);
+					}
+					else tmp = null;
 				}
 			}
+		});
+
+		subscribeBroadcast(TerminateBroadcast.class, (callBack)->{
+			System.out.println(this.getName() + " Have been terminated ");
+			terminate();
 		});
 	}
 

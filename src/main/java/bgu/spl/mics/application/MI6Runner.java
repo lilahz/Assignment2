@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.gson.stream.JsonReader;
 import main.java.bgu.spl.mics.*;
+import main.java.bgu.spl.mics.application.passiveObjects.Diary;
 import main.java.bgu.spl.mics.application.passiveObjects.Inventory;
 import main.java.bgu.spl.mics.application.passiveObjects.Squad;
 import main.java.bgu.spl.mics.application.publishers.TimeService;
@@ -21,12 +22,14 @@ import main.java.bgu.spl.mics.application.subscribers.Q;
  */
 public class MI6Runner {
     public static ArrayList<Subscriber> subscribers = new ArrayList<>();
+    public static ArrayList<Thread> threads = new ArrayList<>();
     public static TimeService timeService;
 
     public static void main(String[] args) {
         MessageBroker messageBroker = MessageBrokerImpl.getInstance(); // maybe wrong - check about the reference
         Inventory inventory = Inventory.getInstance();
         Squad squad = Squad.getInstance();
+        Diary diary = Diary.getInstance();
 
         Gson gson = new Gson();
         try {
@@ -35,10 +38,22 @@ public class MI6Runner {
             inventory.load(helper.inventory);
             squad.load(helper.squad);
             loadServices(helper.services);
-        } catch (FileNotFoundException e) {
+
+            System.out.println("Starting to create threads");
+
+            createThreads();
+
+            for (Thread t : threads) {
+                t.join();
+                System.out.println("waiting for " + t.getName());
+            }
+        } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
         }
 
+        System.out.println("Printing");
+        inventory.printToFile(args[1]);
+        diary.printToFile(args[2]);
     }
 
     /**
@@ -56,13 +71,30 @@ public class MI6Runner {
         for (int i = 0; i < services.intelligence.length; i++) {
             Intelligence tmp = new Intelligence(i);
             tmp.load(services.intelligence[i].getMissions());
-
             subscribers.add(tmp);
         }
 
         timeService = new TimeService(services.time);
 
         subscribers.add(new Q());
+    }
+
+    /**
+     * Create thread for each service in the subscribers array.
+     * Start each thread and add it to the threads array.
+     */
+    public static void createThreads() {
+        for (int i = 0; i < subscribers.size(); i++) {
+            Thread t = new Thread((subscribers.get(i)),subscribers.get(i).getName());
+            System.out.println("Starting " + subscribers.get(i).getName());
+            threads.add(t);
+            t.start();
+        }
+
+        Thread t = new Thread(timeService);
+        System.out.println("Starting " + timeService.getName());
+        t.start();
+//        threads.add(t);
     }
 
 }

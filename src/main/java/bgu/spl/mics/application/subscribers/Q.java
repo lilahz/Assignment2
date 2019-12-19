@@ -2,6 +2,7 @@ package main.java.bgu.spl.mics.application.subscribers;
 
 import main.java.bgu.spl.mics.Subscriber;
 import main.java.bgu.spl.mics.application.messages.GadgetAvailableEvent;
+import main.java.bgu.spl.mics.application.messages.TerminateBroadcast;
 import main.java.bgu.spl.mics.application.messages.TickBroadcast;
 import main.java.bgu.spl.mics.application.passiveObjects.Inventory;
 
@@ -21,8 +22,18 @@ public class Q extends Subscriber {
 	@Override
 	protected void initialize() {
 		subscribeEvent(GadgetAvailableEvent.class , (callBack)->{
-			if (inventory.getItem(callBack.getGadget()))
+			System.out.println("Q - Checking for available gadget");
+			if (inventory.getItem(callBack.getGadget())) {
 				complete(callBack, callBack.getTime());
+			}
+			else {
+				complete(callBack, null);
+			}
+		});
+
+		subscribeBroadcast(TerminateBroadcast.class, (callBack)->{
+			System.out.println(this.getName() + " Have been terminated ");
+			terminate();
 		});
 		
 	}

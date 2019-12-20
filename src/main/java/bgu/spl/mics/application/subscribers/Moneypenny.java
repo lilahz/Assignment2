@@ -53,7 +53,7 @@ public class Moneypenny extends Subscriber {
             subscribeEvent(AgentReleaseEvent.class, (callBack) -> {
                 System.out.println("MoneyPenny - Releasing agents");
                 squad.releaseAgents(callBack.getAgentList());
-                complete(callBack, true); // TODO: whats the result to send
+                complete(callBack, true);
             });
 
         subscribeBroadcast(TerminateBroadcast.class, (callBack) -> {

@@ -35,7 +35,6 @@ public class MissionInfo {
      * Sets the serial agent number.
      */
     public void setSerialAgentsNumbers(List<String> serialAgentsNumbers) {
-    	// TODO: check if really works or needed loop
 		this.serialAgentsNumbers = serialAgentsNumbers;
     }
 

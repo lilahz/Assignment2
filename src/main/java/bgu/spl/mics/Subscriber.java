@@ -118,7 +118,7 @@ public abstract class Subscriber extends RunnableSubPub {
      */
     @Override
     public final void run() {
-        System.out.println("Registering and initializing " + this.getName());
+//        System.out.println("Registering and initializing " + this.getName());
         messageBroker.register(this);
         initialize();
         try {

@@ -62,7 +62,6 @@ public class Agent {
 	/**
 	 * Releases an agent.
 	 */
-	// TODO: maybe need syncronized?
 	public synchronized void release(){
 		isAvailable = true;
 	}

@@ -13,8 +13,6 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Only private fields and methods can be added to this class.
  */
 public class MessageBrokerImpl implements MessageBroker {
-    // TODO: check if needed to create queue for broadcast messages
-
     // Map messagesQ for each subscriber.
     private Map<RunnableSubPub, LinkedBlockingQueue<Message>> subsMap;
     // Map of types of events and broadcasts and Q of subscribers that are subscribed to that type.
@@ -80,7 +78,7 @@ public class MessageBrokerImpl implements MessageBroker {
     public synchronized <T> void complete(Event<T> e, T result) {
         Future<T> future = (Future<T>) futureMap.get(e);
         if (future != null){
-            System.out.println(e + " Setting to complete with result - " + result);
+//            System.out.println(e + " Setting to complete with result - " + result);
 			future.resolve(result);
 		}
 
@@ -113,7 +111,6 @@ public class MessageBrokerImpl implements MessageBroker {
         //we will add to the messageQ of the first subscriber in the Type of event in eventsmap
         //and we will take him out of the Q and insert him again(round robin).
         Future<T> output = new Future<>();
-        ;
         if (eventsMap.containsKey(e.getClass())) {
             RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
             if (temp != null) {
@@ -172,8 +169,6 @@ public class MessageBrokerImpl implements MessageBroker {
             Message msg = q.poll();
             futureMap.get(msg).resolve(null);
         }
-
-
     }
 
     /**
@@ -196,7 +191,7 @@ public class MessageBrokerImpl implements MessageBroker {
     public Message awaitMessage(Subscriber m) throws InterruptedException {
         LinkedBlockingQueue tmp = subsMap.get(m);
         if (tmp == null) {
-            throw new InterruptedException("no subscriber has registerd");
+            throw new InterruptedException("no subscriber has registered");
         }
         Message message = (Message) tmp.take();
         return message;

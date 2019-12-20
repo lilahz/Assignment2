@@ -43,7 +43,7 @@ public class TimeService extends Publisher {
             public void run() {
                 if (currentTime.intValue() <= duration) {
                     simplePublisher.sendBroadcast(new TickBroadcast(currentTime.intValue(),duration));
-
+                    System.out.println( " -------------- TIME TICK ----------- " + currentTime);
                     int oldVal, newVal;
                     do {
                         oldVal = currentTime.intValue();
@@ -58,6 +58,6 @@ public class TimeService extends Publisher {
                 }
             }
         };
-        timer.schedule(task, 100, duration);
+        timer.schedule(task, 0, 100); // todo thats the problem!?
     }
 }

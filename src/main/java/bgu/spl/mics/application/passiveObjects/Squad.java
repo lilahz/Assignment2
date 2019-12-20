@@ -57,7 +57,7 @@ public class Squad {
             for (int i = 0; i < serials.size(); i++) {
                 Agent agent = agents.get(serials.get(i));
                 agents.get(serials.get(i)).release();
-                System.out.println("MoneyPenny - releasing " + agent.getSerialNumber());
+//                System.out.println("MoneyPenny - releasing " + agent.getSerialNumber());
                 agents.notifyAll();
             }
 
@@ -74,9 +74,8 @@ public class Squad {
         // TODO: find out how to convert time ticks to milliseconds
         try {
             System.out.println("Sending agents to mission");
-            Thread.currentThread().sleep(time);
+            Thread.currentThread().sleep(time * 100);
             releaseAgents(serials);
-            notifyAll();
             System.out.println("released agents");
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -103,13 +102,13 @@ public class Squad {
             try {
                 for (int j = 0; j < serials.size(); j++) {
                     if (!agents.get(serials.get(j)).isAvailable()) {
-                        System.out.println("MoneyPenny - waiting for agent " + agents.get(serials.get(j)).getSerialNumber());
+//                        System.out.println("MoneyPenny - waiting for agent " + agents.get(serials.get(j)).getSerialNumber());
                         agents.wait();
                     }
                 }
                 for (int k = 0; k < serials.size(); k++) {
                     agents.get(serials.get(k)).acquire();
-                    System.out.println("Acquired" + serials.get(k));
+//                    System.out.println("Acquired" + serials.get(k));
 
                 }
             } catch (InterruptedException e) {

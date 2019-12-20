@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class M extends Subscriber {
     private int currentTick;
-    private int duration;
     private int id;
     private Boolean executed;
+    private Boolean foundAgents;
     private Diary diary;
     private Report report;
     private Future<Object[]> moneyPennyIdFuture;
@@ -33,6 +33,7 @@ public class M extends Subscriber {
         this.id = id;
         this.executed = false;
         diary = Diary.getInstance();
+        foundAgents = false;
     }
 
     @Override
@@ -43,7 +44,6 @@ public class M extends Subscriber {
         try {
             subscribeBroadcast(TickBroadcast.class, (callBack) -> {
                 currentTick = callBack.getCurrentTick();
-                duration = callBack.getDuration();
             });
 
             subscribeEvent(MissionReceivedEvent.class, (callBack) -> {
@@ -55,30 +55,43 @@ public class M extends Subscriber {
                 if (moneyPennyIdFuture.get() != null) {
                     boolean acquired = ((AnswerToM) moneyPennyIdFuture.get()[1]).acquiredAgent();
                     System.out.println("M" + id + "Money penny acquired " + acquired);
-                    // Check if the agents were acquired
 
+                    // Check if the agents were acquired
                     if (acquired) {
+                        foundAgents = true;
                         System.out.println("M" + id + " Sending GadgetAvailableEvent to Q");
                         qTimeFuture = getSimplePublisher().sendEvent(new GadgetAvailableEvent(callBack.getGadget(), currentTick));
-                        // If the gadget is available, send event to MoneyPenny to send agents
 
+                        // If the gadget is available, send event to MoneyPenny to send agents
                         if (qTimeFuture.get() != null) {
                             System.out.println("M" + id + " Received callback from Q, " + callBack.getGadget() + " available");
 
+                            // Check if the time is right
                             if (callBack.getTimeExpired() >= currentTick + callBack.getDuration()) {
                                 System.out.println("M" + id + " Sending AgentSendEvent to MoneyPenny");
                                 agentNamesFuture = getSimplePublisher().sendEvent(new AgentSendEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration()));
 
+                                // Receives from MoneyPenny confirmation for sending agents to mission
                                 if (agentNamesFuture.get() != null) {
                                     System.out.println("================================================M" + id + " Mission " + callBack.getMissionName() + " done.");
                                     executed = true;
                                 }
+
+                            // Else, the time wasn't right and the mission couldn't continue
                             }else executed = false;
-                        }else executed = false;
-                    }else executed = false;
+
+                        // Else, the gadget isn't available
+                        } else executed = false;
+
+                    // Else, one of the given agents doesn't exist
+                    } else {
+                        System.out.println("One of the agents wasn't available");
+                        executed = false;
+                        foundAgents = false;
+                    }
                 }
 
-                if (!executed) {
+                if (!executed & foundAgents) {
                     System.out.println("================================================M" + id + " Mission " + callBack.getMissionName() + " failed to execute");
                     Future<?> abortMission = getSimplePublisher().sendEvent(new AgentReleaseEvent(callBack.getSerialAgentsNumbers()));
                 }

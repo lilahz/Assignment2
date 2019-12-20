@@ -12,31 +12,31 @@ reports:
 	gadgetName: Sky Hook
 	timeCreated: 3
 	timeIssued: 3
-	qTime: 5
+	qTime: 3
 
  1:
 	missionName: From Russia With Love
-	M: 1
+	M: 0
 	moneypenny: 0
 	agentsSerialNumbers: 
 		0: 007
 	agentsNames: 
 		0: James Bond
 	gadgetName: Dagger shoe
-	timeCreated: 3
-	timeIssued: 3
-	qTime: 7
+	timeCreated: 6
+	timeIssued: 6
+	qTime: 10
 
  2:
 	missionName: The World Is Not Enough
 	M: 0
-	moneypenny: 1
+	moneypenny: 0
 	agentsSerialNumbers: 
 		0: 006
 	agentsNames: 
 		0: Alec Trevelyan
 	gadgetName: X-ray glasses
-	timeCreated: 16
-	timeIssued: 16
-	qTime: 16
+	timeCreated: 24
+	timeIssued: 24
+	qTime: 24
 total: 5

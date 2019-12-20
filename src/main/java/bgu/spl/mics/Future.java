@@ -32,30 +32,30 @@ public class Future<T> {
      * @return return the result of type T if it is available, if not wait until it is available.
      * 	       
      */
-	public T get() {
-		synchronized (this) {
+	public synchronized T get() {
+		System.out.println("FUTURE CALL ---------------" + isDone());
 			while (!isDone()) {
 				try {
-
+					System.out.println("waiting at the get of future");
 					this.wait();
-					System.out.println("waiting");
+					System.out.println("FUTURE CALL ---------------//" + isDone());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-		}
+			System.out.println("got out of get of future");
 		return result;
 	}
 	
 	/**
      * Resolves the result of this Future object.
      */
-	public void resolve (T result) {
-		synchronized (this) {
+	public synchronized void resolve (T result) {
+
 			this.result = result;
-			isDone=true;
 			this.notifyAll();
-		}
+		this.isDone=true;
+		System.out.println("FUTURE : is done is " + isDone);
 	}
 	
 	/**
@@ -79,10 +79,10 @@ public class Future<T> {
 	public T get(long timeout, TimeUnit unit) {
 		synchronized (this) {
 			try {
-				System.out.println("waiting1");
 				this.wait(unit.toMillis(timeout));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				return result;
 			}
 		}
 		return result;

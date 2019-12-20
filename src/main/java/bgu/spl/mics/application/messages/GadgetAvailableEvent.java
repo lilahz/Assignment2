@@ -8,6 +8,7 @@ public class GadgetAvailableEvent implements Event {
 
     public GadgetAvailableEvent(String gadget, int time) {
         this.gadget = gadget;
+        this.time = time;
     }
 
     public String getGadget() {

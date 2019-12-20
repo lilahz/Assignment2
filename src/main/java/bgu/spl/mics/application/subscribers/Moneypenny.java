@@ -39,17 +39,8 @@ public class Moneypenny extends Subscriber {
                 System.out.println("MoneyPenny " + id + " - Searching for " + callBack.getAgentList().toString());
 				Object[] answerToM = new Object[2];
 				answerToM[0] = id;
-				answerToM[1]= new AnswerToM() {
-					boolean hasCalled=false;
-					@Override
-					public Boolean acquiredAgent() {
-//						if(hasCalled)
-//							return false;
-//						hasCalled=true;
-						return squad.getAgents(callBack.getAgentList());
-					}
-				};
-				complete(callBack,answerToM);
+				answerToM[1]= (AnswerToM) () -> squad.getAgents(callBack.getAgentList());
+				complete(callBack, answerToM);
             });
 
             subscribeEvent(AgentSendEvent.class, (callBack) -> {

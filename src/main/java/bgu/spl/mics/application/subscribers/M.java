@@ -4,6 +4,7 @@ import main.java.bgu.spl.mics.*;
 import main.java.bgu.spl.mics.application.messages.*;
 import main.java.bgu.spl.mics.application.passiveObjects.Diary;
 import main.java.bgu.spl.mics.application.passiveObjects.Report;
+import main.java.bgu.spl.mics.application.passiveObjects.Squad;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -18,16 +19,19 @@ public class M extends Subscriber {
     private int currentTick;
     private int duration;
     private int id;
-    private Boolean executed = false;
+    private Boolean executed;
     private Diary diary;
     private Report report;
     private Future<Object[]> moneyPennyIdFuture;
     private Future<Integer> qTimeFuture;
     private Future<List<String>> agentNamesFuture;
 
+    private Squad squad = Squad.getInstance();
+
     public M(int id) {
         super("M" + id);
         this.id = id;
+        this.executed = false;
         diary = Diary.getInstance();
     }
 
@@ -43,45 +47,40 @@ public class M extends Subscriber {
             });
 
             subscribeEvent(MissionReceivedEvent.class, (callBack) -> {
-                // Send event received by MoneyPenny - questioning if the agents are available
-                System.out.println("----------------M" + id + " start executing " + callBack.getMissionName() + "----------");
-                System.out.println("M " + id + " - Sending AgentAvailableEvent to MoneyPenny for " + callBack.getMissionName());
-                moneyPennyIdFuture = getSimplePublisher().sendEvent(
-                        new AgentAvailableEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration()));
-                System.out.println("moneyPennyIdFuture is done? " + moneyPennyIdFuture.isDone());
-                // If the agents are available
-                if (moneyPennyIdFuture.get((duration - currentTick) * 100, TimeUnit.MILLISECONDS) != null) {
-                    boolean acquired = ((AnswerToM) moneyPennyIdFuture.get()[1]).acquiredAgent();///wait if not free
-                    System.out.println(acquired + "M"+ id);
+                // Send event to moneyPenny to acquire agents
+                executed = false;
+                System.out.println("M" + id + " Sending AgentAvailableEvent to MoneyPenny");
+                moneyPennyIdFuture = getSimplePublisher().sendEvent(new AgentAvailableEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration()));
+
+                if (moneyPennyIdFuture.get() != null) {
+                    boolean acquired = ((AnswerToM) moneyPennyIdFuture.get()[1]).acquiredAgent();
+                    System.out.println("M" + id + "Money penny acquired " + acquired);
+                    // Check if the agents were acquired
+
                     if (acquired) {
-                        // Check if the gadget is also available for the mission
-                        System.out.println("M " + id + "- Sending GadgetAvailableEvent to Q for " + callBack.getMissionName());
-                        qTimeFuture = getSimplePublisher().sendEvent(
-                                new GadgetAvailableEvent(callBack.getGadget(), currentTick));
-                        if (qTimeFuture.get((duration - currentTick) * 100, TimeUnit.MILLISECONDS) != null) {
-                            // Check if the time hasn't expired
-                            System.out.println("gad"+ callBack.getGadget());
+                        System.out.println("M" + id + " Sending GadgetAvailableEvent to Q");
+                        qTimeFuture = getSimplePublisher().sendEvent(new GadgetAvailableEvent(callBack.getGadget(), currentTick));
+                        // If the gadget is available, send event to MoneyPenny to send agents
+
+                        if (qTimeFuture.get() != null) {
+                            System.out.println("M" + id + " Received callback from Q, " + callBack.getGadget() + " available");
+
                             if (callBack.getTimeExpired() >= currentTick + callBack.getDuration()) {
-                                System.out.println("M " + id + " - Sending AgentSendEvent to MoneyPenny to " + callBack.getMissionName());
-                                agentNamesFuture = getSimplePublisher().sendEvent(
-                                        new AgentSendEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration())
-                                );
-                                System.out.println("Mission done " + callBack.getMissionName());
-                                executed = true;
-                                Future<Boolean> missionDone = getSimplePublisher().sendEvent(
-                                        new AgentReleaseEvent(callBack.getSerialAgentsNumbers())
-                                );
-                            }
-                            // If time expired abort mission and release agents
-                        }
-                    }
+                                System.out.println("M" + id + " Sending AgentSendEvent to MoneyPenny");
+                                agentNamesFuture = getSimplePublisher().sendEvent(new AgentSendEvent(callBack.getSerialAgentsNumbers(), callBack.getDuration()));
+
+                                if (agentNamesFuture.get() != null) {
+                                    System.out.println("================================================M" + id + " Mission " + callBack.getMissionName() + " done.");
+                                    executed = true;
+                                }
+                            }else executed = false;
+                        }else executed = false;
+                    }else executed = false;
                 }
-                // If gadget is not available abort mission and release agents
-                else if (!executed) {
-                    System.out.println("M " + id + "- Mission aborted");
-                    Future<Boolean> abortMission = getSimplePublisher().sendEvent(
-                            new AgentReleaseEvent(callBack.getSerialAgentsNumbers())
-                    );
+
+                if (!executed) {
+                    System.out.println("================================================M" + id + " Mission " + callBack.getMissionName() + " failed to execute");
+                    Future<?> abortMission = getSimplePublisher().sendEvent(new AgentReleaseEvent(callBack.getSerialAgentsNumbers()));
                 }
 
                 diary.incrementTotal();
@@ -104,14 +103,17 @@ public class M extends Subscriber {
 
             });
 
-            subscribeBroadcast(TerminateBroadcast.class, (callBack) -> {
-                System.out.println(this.getName() + " Have been terminated ");
-                terminate();
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        subscribeBroadcast(TerminateBroadcast.class, (callBack) -> {
+            System.out.println(this.getName() + " Have been terminated ");
+            terminate();
+        });
+    } catch(
+    Exception e)
+
+    {
+        e.printStackTrace();
     }
+}
 
 
 }

@@ -42,7 +42,6 @@ public class TimeService extends Publisher {
         TimerTask task = new TimerTask() {
             public void run() {
                 if (currentTime.intValue() <= duration) {
-                    System.out.println("TimeService  - Sending current time " + currentTime.intValue());
                     simplePublisher.sendBroadcast(new TickBroadcast(currentTime.intValue(),duration));
 
                     int oldVal, newVal;

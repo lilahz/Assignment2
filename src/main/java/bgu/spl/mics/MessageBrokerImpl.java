@@ -22,7 +22,7 @@ public class MessageBrokerImpl implements MessageBroker {
     // Map of subscribers and what type of broadcast they are subscribed to.
     private Map<Class<? extends Message>, ConcurrentLinkedQueue<RunnableSubPub>> broadcastsMap;
     //Map of Future objects and the events it represents.
-    private Map<Event<?>, Future<?>> futureMap;
+    private Map<Event<?>, Future> futureMap;
 
     /**
      * Initializes new Message Broker instance
@@ -77,10 +77,10 @@ public class MessageBrokerImpl implements MessageBroker {
     }
 
     @Override
-    public <T> void complete(Event<T> e, T result) {
-        // TODO: check what needs to be done to implement thread-safe
+    public synchronized <T> void complete(Event<T> e, T result) {
         Future<T> future = (Future<T>) futureMap.get(e);
         if (future != null){
+            System.out.println(e + " Setting to complete with result - " + result);
 			future.resolve(result);
 		}
 

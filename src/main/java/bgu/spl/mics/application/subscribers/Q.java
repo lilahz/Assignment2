@@ -25,9 +25,12 @@ public class Q extends Subscriber {
 			System.out.println("Q - Checking for available gadget");
 			if (inventory.getItem(callBack.getGadget())) {
 				complete(callBack, callBack.getTime());
+				System.out.println("get time : " + callBack.getTime());
+				System.out.println("-----------------got it! "+callBack.getGadget());
 			}
 			else {
 				complete(callBack, null);
+				System.out.println("-----------didnt get the gadget "+callBack.getGadget());
 			}
 		});
 

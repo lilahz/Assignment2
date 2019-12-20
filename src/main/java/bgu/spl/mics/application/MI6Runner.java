@@ -88,11 +88,13 @@ public class MI6Runner {
             Thread t = new Thread((subscribers.get(i)),subscribers.get(i).getName());
             System.out.println("Starting " + subscribers.get(i).getName());
             threads.add(t);
+            t.setDaemon(true);
             t.start();
         }
 
         Thread t = new Thread(timeService);
         System.out.println("Starting " + timeService.getName());
+        t.setDaemon(true);
         t.start();
 //        threads.add(t);
     }

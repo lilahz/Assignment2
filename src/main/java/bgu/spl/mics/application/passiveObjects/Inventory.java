@@ -3,6 +3,7 @@ package main.java.bgu.spl.mics.application.passiveObjects;
 import com.google.gson.Gson;
 import main.java.bgu.spl.mics.MessageBrokerImpl;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,9 +78,15 @@ public class Inventory {
 	 * This method is called by the main method in order to gen`erate the output.
 	 */
 	public void printToFile(String filename){
-		Gson gson = new Gson();
 		try {
-			gson.toJson(gadgets, new FileWriter(filename));
+			FileOutputStream file =new FileOutputStream(filename);
+			Gson gson = new Gson();
+			for (int i = 0; i < gadgets.size(); i++){
+				String godisthedj = gson.toJson(gadgets.get(i));
+				file.write((i +": ").getBytes());
+		     	file.write(godisthedj.getBytes());
+			}
+			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

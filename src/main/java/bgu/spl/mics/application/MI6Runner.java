@@ -41,8 +41,10 @@ public class MI6Runner {
 
             System.out.println("Starting to create threads");
 
+            // Create and start running threads
             createThreads();
 
+            // waiting for all threads to be done
             for (Thread t : threads) {
                 t.join();
                 System.out.println("waiting for " + t.getName());
@@ -51,9 +53,15 @@ public class MI6Runner {
             e.printStackTrace();
         }
 
-        System.out.println("Printing");
+
+
+//        ObjectOutputStream outputStream = null;
+//        try {
+//            FileOutputStream fileOutputStream = new FileOutputStream(args[1])
+//        }
         inventory.printToFile(args[1]);
         diary.printToFile(args[2]);
+        System.out.println("Printing");
     }
 
     /**

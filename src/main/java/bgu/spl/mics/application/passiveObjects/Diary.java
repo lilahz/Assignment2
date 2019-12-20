@@ -3,6 +3,7 @@ package main.java.bgu.spl.mics.application.passiveObjects;
 import com.google.gson.Gson;
 import main.java.bgu.spl.mics.MessageBrokerImpl;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,9 +65,30 @@ public class Diary {
 	 * This method is called by the main method in order to generate the output.
 	 */
 	public void printToFile(String filename){
-		Gson gson = new Gson();
 		try {
-			gson.toJson(reportList, new FileWriter(filename));
+			FileOutputStream file =new FileOutputStream(filename);
+			Gson gson = new Gson();
+			file.write(("reports:").getBytes());
+			for (int i = 0; i < reportList.size(); i++){
+				file.write(("\n " + i + ":" +'\n').getBytes());
+				file.write(("\t" + "missionName: " + reportList.get(i).getMissionName()+ "\n").getBytes());
+				file.write(("\t" + "M: " + reportList.get(i).getM() + '\n').getBytes());
+				file.write(("\t" + "moneypenny: " + reportList.get(i).getMoneypenny() + "\n").getBytes());
+				file.write(("\t" + "agentsSerialNumbers: " + '\n').getBytes());
+				for (int j = 0; j < reportList.get(i).getAgentsSerialNumbers().size(); j++){
+					file.write(("\t" + "\t"  + j + ": " + reportList.get(i).getAgentsSerialNumbers().get(j)  +"\n").getBytes());
+				}
+				file.write(("\t" + "agentsNames: " + "\n").getBytes());
+				for (int j = 0; j < reportList.get(i).getAgentsNames().size(); j++){
+					file.write(("\t" + "\t" + j + ": " + reportList.get(i).getAgentsNames().get(j)  +"\n").getBytes());
+				}
+				file.write(("\t" + "gadgetName: " +reportList.get(i).getGadgetName() + "\n").getBytes());
+				file.write(("\t" + "timeCreated: " +reportList.get(i).getTimeCreated() + "\n").getBytes());
+				file.write(("\t" + "timeIssued: " +reportList.get(i).getTimeIssued() + "\n").getBytes());
+				file.write(("\t" + "qTime: " +reportList.get(i).getQTime()+ "\n").getBytes());
+			}
+			file.write(("total: " + total).getBytes());
+			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

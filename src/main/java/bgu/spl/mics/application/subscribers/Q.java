@@ -14,17 +14,21 @@ import main.java.bgu.spl.mics.application.passiveObjects.Inventory;
  */
 public class Q extends Subscriber {
 	private Inventory inventory = Inventory.getInstance();
-
+	private int currentTick ;
 	public Q() {
 		super("Q");
 	}
 
 	@Override
 	protected void initialize() {
+		subscribeBroadcast(TickBroadcast.class, (callBack)->{
+			currentTick = callBack.getCurrentTick();
+		});
+
 		subscribeEvent(GadgetAvailableEvent.class , (callBack)->{
 			System.out.println("Q - Checking for available gadget");
 			if (inventory.getItem(callBack.getGadget())) {
-				complete(callBack, callBack.getTime());
+				complete(callBack, currentTick);
 				System.out.println("get time : " + callBack.getTime());
 				System.out.println("-----------------got it! "+callBack.getGadget());
 			}

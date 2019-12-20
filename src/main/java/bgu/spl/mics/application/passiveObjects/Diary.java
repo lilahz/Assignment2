@@ -1,10 +1,8 @@
 package main.java.bgu.spl.mics.application.passiveObjects;
 
 import com.google.gson.Gson;
-import main.java.bgu.spl.mics.MessageBrokerImpl;
 
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

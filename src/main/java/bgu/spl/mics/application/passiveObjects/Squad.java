@@ -70,15 +70,17 @@ public class Squad {
      *
      * @param time time ticks to sleep
      */
-    public synchronized void sendAgents(List<String> serials, int time) {
-        // TODO: find out how to convert time ticks to milliseconds
-        try {
-            System.out.println("Sending agents to mission");
-            Thread.currentThread().sleep(time * 100);
-            releaseAgents(serials);
-            System.out.println("released agents");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    // TODO : move the synch from the title to sycnh(agents) . employee: ofeer.
+    public void sendAgents(List<String> serials, int time) {
+        synchronized(agents) {
+            try {
+                System.out.println("Sending agents to mission");
+                Thread.currentThread().sleep(time * 100);
+                releaseAgents(serials);
+                System.out.println("released agents");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

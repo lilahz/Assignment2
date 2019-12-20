@@ -55,14 +55,14 @@ public class Agent {
 	/**
 	 * Acquires an agent.
 	 */
-	public synchronized void acquire(){
+	public void acquire(){
 		isAvailable = false;
 	}
 
 	/**
 	 * Releases an agent.
 	 */
-	public synchronized void release(){
+	public void release(){
 		isAvailable = true;
 	}
 }

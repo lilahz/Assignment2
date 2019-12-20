@@ -46,8 +46,9 @@ public class MessageBrokerImpl implements MessageBroker {
         return singleHolder.instance;
     }
 
+    //tODO : we got the synch down . worked fine , employee : ofeer.
     @Override
-    public synchronized <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
+    public  <T> void subscribeEvent(Class<? extends Event<T>> type, Subscriber m) {
         // if the type of event does not exist add the type to the map and create Q with m.
         if (!eventsMap.containsKey(type)) {
             ConcurrentLinkedQueue tmp = new ConcurrentLinkedQueue();
@@ -60,28 +61,29 @@ public class MessageBrokerImpl implements MessageBroker {
         }
     }
 
+    //TODO : got the synch down from title . employee : ofeer.
     @Override
-    public synchronized void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
+    public void subscribeBroadcast(Class<? extends Broadcast> type, Subscriber m) {
         // if the type of broadcast does not exist add the type to the map and create Q with m.
-        if (!broadcastsMap.containsKey(type)) {
-            ConcurrentLinkedQueue tmp = new ConcurrentLinkedQueue();
-            tmp.add(m);
-            broadcastsMap.put(type, tmp);
-        }
-        // Else, the type exist and add m to the Q.
-        else {
-            broadcastsMap.get(type).add(m);
+        synchronized (broadcastsMap) {
+            if (!broadcastsMap.containsKey(type)) {
+                ConcurrentLinkedQueue tmp = new ConcurrentLinkedQueue();
+                tmp.add(m);
+                broadcastsMap.put(type, tmp);
+            }
+            // Else, the type exist and add m to the Q.
+            else {
+                broadcastsMap.get(type).add(m);
+            }
         }
     }
 
     @Override
-    public synchronized <T> void complete(Event<T> e, T result) {
+    public <T> void complete(Event<T> e, T result) {
         Future<T> future = (Future<T>) futureMap.get(e);
         if (future != null){
-//            System.out.println(e + " Setting to complete with result - " + result);
 			future.resolve(result);
 		}
-
     }
 
     @Override
@@ -98,30 +100,28 @@ public class MessageBrokerImpl implements MessageBroker {
                             f.resolve(null);
                         }
                     }
-
                 }
                 subsMap.get(x).add(b);
             }
         }
     }
-
-
+     // todo : tried to synch the 3 maps , does not work . employee : ofeer.
     @Override
     public synchronized <T> Future<T> sendEvent(Event<T> e) {
         //we will add to the messageQ of the first subscriber in the Type of event in eventsmap
         //and we will take him out of the Q and insert him again(round robin).
         Future<T> output = new Future<>();
-        if (eventsMap.containsKey(e.getClass())) {
-            RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
-            if (temp != null) {
-                subsMap.get(temp).add(e);
-                eventsMap.get(e.getClass()).add(temp);
-                futureMap.put(e, output);
-            } else return null;
-        } else {
-            return null;
-        }
-        return output;
+            if (eventsMap.containsKey(e.getClass())) {
+                RunnableSubPub temp = eventsMap.get(e.getClass()).poll();
+                if (temp != null) {
+                    futureMap.put(e, output);
+                    subsMap.get(temp).add(e);
+                    eventsMap.get(e.getClass()).add(temp);
+                } else return null;
+            } else {
+                return null;
+            }
+            return output;
     }
 
     /**
@@ -148,7 +148,8 @@ public class MessageBrokerImpl implements MessageBroker {
      * @param m the Subscriber to unregister.
      */
     @Override
-    public synchronized void unregister(Subscriber m) {
+    //TODO : got the synch from the function title down . employee : ofeer.
+    public void unregister(Subscriber m) {
         for (Class<? extends Message> e : eventsMap.keySet()) {
             if (eventsMap.get(e).contains(m)) {
                 synchronized (eventsMap.get(e)) {
@@ -196,6 +197,4 @@ public class MessageBrokerImpl implements MessageBroker {
         Message message = (Message) tmp.take();
         return message;
     }
-
-
 }

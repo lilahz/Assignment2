@@ -48,8 +48,9 @@ public class Inventory {
      * @param inventory 	Data structure containing all data necessary for initialization
      * 						of the inventory.
      */
+	//TODO : i removed a synch list of some sort , employee : ofeer.
 	public void load (String[] inventory) {
-		gadgets = Collections.synchronizedList(new ArrayList<>());
+		gadgets = new ArrayList<>();
 		for (int i = 0; i < inventory.length; i++)
 		{
 			gadgets.add(inventory[i]);
